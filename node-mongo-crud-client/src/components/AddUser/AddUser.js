@@ -9,7 +9,7 @@ const AddUser = () => {
 
     const user = { name, email };
 
-//        send data to server.
+    //  send data to server.
     fetch("http://localhost:5000/user", {
       method: "POST",
       headers: {
@@ -17,9 +17,9 @@ const AddUser = () => {
       },
       body: JSON.stringify(user),
     })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    event.target.reset()
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+    event.target.reset();
   };
 
   return (

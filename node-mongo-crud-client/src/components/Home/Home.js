@@ -9,6 +9,7 @@ const Home = () => {
       .then((data) => setUsers(data));
   }, []);
 
+  // Delete user from database.
   const handleDelete = (id) => {
     const proceed = window.confirm("Are you want to delete ?");
     console.log("deleting id : ", id);
