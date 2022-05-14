@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@cluster0.rb00t.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-console.log(uri);
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -30,7 +29,15 @@ async function run() {
       res.send(result);
     });
 
-   
+    // get one
+    app.get("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await userCollection.findOne(query);
+      res.send(result);
+    });
+
     // post
     app.post("/user", async (req, res) => {
       const user = req.body;
@@ -46,6 +53,50 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const result = await userCollection.deleteOne(query);
       res.send(result);
+
+      // update user.
+      app.put("/user/:id", async (req, res) => {
+        const id = req.params.id;
+        console.log(id);
+        const updatedUser = req.body;
+        console.log(updateUser);
+        const filter = { _id: ObjectId(id) };
+        const options = { upsert: true };
+        const updatedDoc = {
+          $set: {
+            name: updatedUser.name,
+            email: updatedUser.email,
+          },
+        };
+        const result = await userCollection.updateOne(
+          filter,
+          updatedDoc,
+          options
+        );
+        res.send(result);
+      });
+
+      // update user
+      // app.put("/user/:id", async (req, res) => {
+      //   const updateUser = req.body;
+      //   console.log(updateUser);
+      //   const id = req.params.id;
+      //   console.log(id);
+      // const filter = { _id: ObjectId(id) };
+      // const options = { upsert: true };
+      // const updateDoc = {
+      //   $set: {
+      //     updateUser,
+      //   },
+      // };
+
+      // const result = await userCollection.updateOne(
+      //   filter,
+      //   updateDoc,
+      //   options
+      // );
+      // res.send(result);
+      // });
     });
   } finally {
     // await client.close()
