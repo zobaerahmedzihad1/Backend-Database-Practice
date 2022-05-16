@@ -29,8 +29,15 @@ async function run() {
       res.send(result);
     });
 
-    // load single service by id
+    // post single service
+    app.post("/service", async (req, res) => {
+      console.log(req.body);
+      const newService = req.body;
+      const result = await serviceCollection.insertOne(newService);
+      res.send(result);
+    });
 
+    // load single service by id
     app.get("/service/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -39,7 +46,7 @@ async function run() {
     });
   } finally {
     // client.close()
-  }
+  } 
 }
 run().catch(console.dir);
 
