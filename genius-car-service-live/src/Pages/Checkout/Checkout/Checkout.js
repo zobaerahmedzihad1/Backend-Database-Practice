@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useServiceDetail from "../../../hooks/useServiceDetail";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
@@ -103,7 +103,7 @@ const Checkout = () => {
           autoComplete="off"
         />
         <br />
-        <Link to='/orders'><input className="w-50" type="submit" value="Place Order" /></Link>
+        <input className="w-50" type="submit" value="Place Order" />
       </form>
     </div>
   );
