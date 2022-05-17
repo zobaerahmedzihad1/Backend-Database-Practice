@@ -1,6 +1,7 @@
 const express = require("express");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
+const cli = require("nodemon/lib/cli");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,6 +21,7 @@ async function run() {
   try {
     await client.connect();
     const serviceCollection = client.db("geniusCar").collection("service");
+    const orderCollection = client.db("geniusCar").collection("order");
 
     // load all services
     app.get("/service", async (req, res) => {
@@ -44,9 +46,25 @@ async function run() {
       const result = await serviceCollection.findOne(query);
       res.send(result);
     });
+
+    // delete
+    app.delete("/service/:id", async (req, res) => {
+      console.log(req.params.id);
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await serviceCollection.deleteOne(query);
+      res.send(result);
+
+      //  order collection api
+      app.post("/order", async (req, res) => {
+        const order = req.body;
+        const result = await orderCollection.insertOne(order);
+        res.send(result);
+      });
+    });
   } finally {
     // client.close()
-  } 
+  }
 }
 run().catch(console.dir);
 
