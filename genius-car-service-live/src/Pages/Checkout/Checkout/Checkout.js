@@ -1,8 +1,10 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useServiceDetail from "../../../hooks/useServiceDetail";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Checkout = () => {
   const { serviceId } = useParams();
@@ -14,12 +16,26 @@ const Checkout = () => {
 
     const order = {
       service: service.name,
-      name: user.displayName,
-      email: user.email,
+      name: user?.displayName,
+      email: user?.email,
       phone: event.target.phone.value,
       address: event.target.address.value,
     };
-    console.log(order);
+
+    const proceed = window.confirm("Are you sure you want to place order ?");
+    if (proceed) {
+      console.log(order);
+      axios.post("http://localhost:5000/order", order).then((response) => {
+        console.log(response);
+        const { data } = response;
+        if (data.insertedId) {
+          toast("Your order is pleased.");
+        }
+      });
+    } else {
+      return;
+    }
+    event.target.reset();
   };
 
   // const [user, setUser] = useState({
@@ -48,6 +64,7 @@ const Checkout = () => {
           value={user.displayName}
           placeholder="name"
           disabled
+          readOnly
         />
         <br />
         <input
@@ -57,6 +74,7 @@ const Checkout = () => {
           value={user.email}
           placeholder="email"
           disabled
+          readOnly
         />
         <br />
         <input
@@ -66,6 +84,7 @@ const Checkout = () => {
           value={service.name}
           placeholder="service"
           disabled
+          readOnly
         />
         <br />
         <input
@@ -84,7 +103,7 @@ const Checkout = () => {
           autoComplete="off"
         />
         <br />
-        <input className="w-50" type="submit" value="Place Order" />
+        <Link to='/orders'><input className="w-50" type="submit" value="Place Order" /></Link>
       </form>
     </div>
   );
