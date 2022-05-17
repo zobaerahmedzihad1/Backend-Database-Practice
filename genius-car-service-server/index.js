@@ -33,7 +33,7 @@ async function run() {
 
     // post single service
     app.post("/service", async (req, res) => {
-      console.log(req.body);
+      // console.log(req.body);
       const newService = req.body;
       const result = await serviceCollection.insertOne(newService);
       res.send(result);
@@ -49,18 +49,19 @@ async function run() {
 
     // delete
     app.delete("/service/:id", async (req, res) => {
-      console.log(req.params.id);
+      // console.log(req.params.id);
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await serviceCollection.deleteOne(query);
       res.send(result);
+    });
 
-      //  order collection api
-      app.post("/order", async (req, res) => {
-        const order = req.body;
-        const result = await orderCollection.insertOne(order);
-        res.send(result);
-      });
+    //  order collection api
+    app.post("/order", async (req, res) => {
+      const order = req.body;
+      console.log(order);
+      const result = await orderCollection.insertOne(order);
+      res.send(result);
     });
   } finally {
     // client.close()
